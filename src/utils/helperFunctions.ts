@@ -1,10 +1,4 @@
-import { LoginFormDataType, RegisterFormDataType } from "../types";
-
-export function validateField(
-  name: string,
-  value: string,
-  formData: RegisterFormDataType | LoginFormDataType
-) {
+export function validateField(name: string, value: string, password?: string) {
   switch (name) {
     case "name":
       if (!value.trim()) {
@@ -15,7 +9,7 @@ export function validateField(
     case "email":
       if (!value.trim()) {
         return "Email is required";
-      } else if (!/\S+@\S+\.\S+/.test(value)) {
+      } else if (!isValidEmail(value)) {
         return "Email is invalid";
       }
       break;
@@ -33,7 +27,7 @@ export function validateField(
         return "Confirm Password is required";
       } else if (value.length < 6) {
         return "Password must be at least 6 characters";
-      } else if (value !== formData.password) {
+      } else if (value !== password) {
         return "Passwords do not match";
       }
       break;
@@ -44,3 +38,9 @@ export function validateField(
 
   return "";
 }
+
+const isValidEmail = (email: string) => {
+  return /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/.test(
+    email
+  );
+};

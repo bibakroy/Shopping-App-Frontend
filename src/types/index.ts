@@ -2,6 +2,7 @@ export type FormPropertyType = {
   label: string;
   name: string;
   placeholder: string;
+  type?: string;
   required: boolean;
 };
 
@@ -18,8 +19,8 @@ export type LoginFormDataType = {
 };
 
 export type ErrorType = {
-  name: string;
+  name?: string;
   email: string;
   password: string;
-  confirmPassword: string;
+  confirmPassword?: string;
 };

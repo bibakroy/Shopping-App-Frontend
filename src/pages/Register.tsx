@@ -22,16 +22,53 @@ function Register() {
     confirmPassword: "",
   });
 
-  const handleChange = (e: any) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    setErrors({ ...errors, [e.target.name]: "" });
+  const handleChange = (e: React.FormEvent<HTMLFormElement>) => {
+    const { name, value } = e.target as HTMLInputElement;
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value,
+    }));
+
+    if (name === "password" && formData.confirmPassword) {
+      const passwordErrorMsg = validateField("password", value);
+      const confirmPasswordErrorMsg = validateField(
+        "confirmPassword",
+        formData.confirmPassword,
+        value
+      );
+
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        password: passwordErrorMsg,
+        confirmPassword: confirmPasswordErrorMsg,
+      }));
+    } else if (name === "confirmPassword" && formData.password) {
+      const confirmPasswordErrorMsg = validateField(
+        "confirmPassword",
+        value,
+        formData.password
+      );
+
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        confirmPassword: confirmPasswordErrorMsg,
+      }));
+    } else {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        [name]: "",
+      }));
+    }
   };
 
   const handleBlur = (e: React.FormEvent<HTMLFormElement>) => {
     const { name, value } = e.target as HTMLInputElement;
 
-    const errorMsg = validateField(name, value, formData);
-    setErrors({ ...errors, [name]: errorMsg });
+    const errorMsg = validateField(name, value, formData.password);
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: errorMsg,
+    }));
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -40,7 +77,7 @@ function Register() {
     const validationErrors = {} as ErrorType;
 
     for (const [name, value] of Object.entries(formData)) {
-      const errorMsg = validateField(name, value, formData);
+      const errorMsg = validateField(name, value, formData.password);
       if (errorMsg) {
         validationErrors[name as keyof ErrorType] = errorMsg;
       }
@@ -60,22 +97,25 @@ function Register() {
   return (
     <div className={styles.main}>
       <div className={styles.container}>
-        <h4>Create Your Account</h4>
+        <h3>Create Your Account</h3>
         <form className={styles.form} onSubmit={handleSubmit} noValidate>
-          {registerFormProperties.map((formProperty, index) => (
-            <InputContainer
-              key={index}
-              formProperty={formProperty}
-              errors={errors}
-              handleChange={handleChange}
-              handleBlur={handleBlur}
-            ></InputContainer>
-          ))}
+          <div className={styles.formFields}>
+            {registerFormProperties.map((formProperty, index) => (
+              <InputContainer
+                key={index}
+                formProperty={formProperty}
+                errors={errors}
+                handleChange={handleChange}
+                handleBlur={handleBlur}
+              ></InputContainer>
+            ))}
+          </div>
+
           <button className={styles.button}>Create Account</button>
         </form>
         <p>
-          Already have an account?
-          <span>
+          Already have an account?{" "}
+          <span className={styles.redirectSpan}>
             <Link to={"/login"}> Log In</Link>
           </span>
         </p>

@@ -23,7 +23,7 @@ function InputContainer({
         className={`${styles.input} ${
           errors[formProperty.name as keyof ErrorType] ? styles.border : ""
         }`}
-        type="text"
+        type={formProperty.type ? formProperty.type : "text"}
         name={formProperty.name}
         required={formProperty.required}
         placeholder={formProperty.placeholder}
