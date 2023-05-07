@@ -4,28 +4,33 @@ import { Link } from "react-router-dom";
 
 import styles from "../styles/Register.module.css";
 import InputContainer from "../components/InputContainer";
-import { FormValueType, ErrorType } from "../types";
+import { RegisterFormDataType, ErrorType } from "../types";
 import { registerFormProperties } from "../utils/data";
 import { validateField } from "../utils/helperFunctions";
 
 function Register() {
-  const [formValue, setFormValue] = useState<FormValueType>({
+  const [formData, setFormData] = useState<RegisterFormDataType>({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
-  const [errors, setErrors] = useState<ErrorType>({});
+  const [errors, setErrors] = useState<ErrorType>({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
 
   const handleChange = (e: any) => {
-    setFormValue({ ...formValue, [e.target.name]: e.target.value });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
     setErrors({ ...errors, [e.target.name]: "" });
   };
 
   const handleBlur = (e: React.FormEvent<HTMLFormElement>) => {
     const { name, value } = e.target as HTMLInputElement;
 
-    const errorMsg = validateField(name, value, formValue);
+    const errorMsg = validateField(name, value, formData);
     setErrors({ ...errors, [name]: errorMsg });
   };
 
@@ -34,15 +39,15 @@ function Register() {
 
     const validationErrors = {} as ErrorType;
 
-    for (const [name, value] of Object.entries(formValue)) {
-      const errorMsg = validateField(name, value, formValue);
+    for (const [name, value] of Object.entries(formData)) {
+      const errorMsg = validateField(name, value, formData);
       if (errorMsg) {
         validationErrors[name as keyof ErrorType] = errorMsg;
       }
     }
 
     if (Object.keys(validationErrors).length === 0) {
-      console.log("Submitted");
+      console.log(formData);
       // axios
       //   .post("/api/users/register", formValue)
       //   .then((res) => console.log(res))
@@ -61,7 +66,6 @@ function Register() {
             <InputContainer
               key={index}
               formProperty={formProperty}
-              formValue={formValue}
               errors={errors}
               handleChange={handleChange}
               handleBlur={handleBlur}

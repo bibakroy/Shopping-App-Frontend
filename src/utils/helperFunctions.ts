@@ -1,9 +1,9 @@
-import { FormValueType } from "../types";
+import { LoginFormDataType, RegisterFormDataType } from "../types";
 
 export function validateField(
   name: string,
   value: string,
-  formValue: FormValueType
+  formData: RegisterFormDataType | LoginFormDataType
 ) {
   switch (name) {
     case "name":
@@ -23,13 +23,17 @@ export function validateField(
     case "password":
       if (!value.trim()) {
         return "Password is required";
+      } else if (value.length < 6) {
+        return "Password must be at least 6 characters";
       }
       break;
 
     case "confirmPassword":
       if (!value.trim()) {
         return "Confirm Password is required";
-      } else if (value !== formValue.password) {
+      } else if (value.length < 6) {
+        return "Password must be at least 6 characters";
+      } else if (value !== formData.password) {
         return "Passwords do not match";
       }
       break;

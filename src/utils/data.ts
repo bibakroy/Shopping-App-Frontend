@@ -26,3 +26,18 @@ export const registerFormProperties: FormPropertyType[] = [
     required: true,
   },
 ];
+
+export const loginFormProperties: FormPropertyType[] = [
+  {
+    label: "Email",
+    name: "email",
+    placeholder: "Enter Your Email",
+    required: true,
+  },
+  {
+    label: "Password",
+    name: "password",
+    placeholder: "Enter Your Password",
+    required: true,
+  },
+];

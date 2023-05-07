@@ -1,9 +1,8 @@
 import styles from "../styles/InputContainer.module.css";
-import { FormPropertyType, FormValueType, ErrorType } from "../types";
+import { FormPropertyType, ErrorType } from "../types";
 
 type InputContainerType = {
   formProperty: FormPropertyType;
-  formValue: FormValueType;
   errors: ErrorType;
   handleChange: (e: any) => void;
   handleBlur: (e: any) => void;
@@ -11,7 +10,6 @@ type InputContainerType = {
 
 function InputContainer({
   formProperty,
-  formValue,
   errors,
   handleChange,
   handleBlur,
@@ -22,10 +20,12 @@ function InputContainer({
         {formProperty.label} {formProperty.required ? "*" : ""}
       </label>
       <input
+        className={`${styles.input} ${
+          errors[formProperty.name as keyof ErrorType] ? styles.border : ""
+        }`}
         type="text"
         name={formProperty.name}
         required={formProperty.required}
-        className={styles.input}
         placeholder={formProperty.placeholder}
         onChange={handleChange}
         onBlur={handleBlur}
