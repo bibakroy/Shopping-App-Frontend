@@ -1,0 +1,25 @@
+.inputContainer {
+  display: flex;
+  width: 20rem;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.label {
+  color: rgb(75, 86, 107);
+}
+
+.input {
+  display: flex;
+  height: 2.5rem;
+  border-radius: 0.2rem;
+  border: 1px solid rgb(0, 0, 0, 0.2);
+  padding: 0 0.8rem;
+  outline: none;
+}
+
+.error {
+  padding: 0px;
+  margin: 0px;
+  color: rgb(233, 69, 96);
+}
