@@ -15,8 +15,8 @@ type UserContextProviderProps = {
 };
 
 type UserContextType = {
-  user: User;
-  setUser: Dispatch<SetStateAction<User>>;
+  user: User | null;
+  setUser: Dispatch<SetStateAction<User | null>>;
   loading: boolean;
   setLoading: Dispatch<SetStateAction<boolean>>;
   logOut: () => void;
@@ -25,13 +25,13 @@ type UserContextType = {
 const UserContext = createContext({} as UserContextType);
 
 export const UserContextProvider = ({ children }: UserContextProviderProps) => {
-  const [user, setUser] = useState<User>({} as User);
-  const [loading, setLoading] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
 
   console.log({ user, loading });
 
   const logOut = () => {
-    setUser({} as User);
+    setUser(null);
     localStorage.removeItem("token");
   };
 
@@ -53,6 +53,8 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
       }
     }
   }, []);
+
+  useEffect(() => {}, [user]);
 
   return (
     <UserContext.Provider
