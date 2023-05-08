@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "../utils/axios";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import styles from "../styles/Auth.module.css";
 import InputContainer from "../components/InputContainer";
@@ -8,6 +9,7 @@ import { RegisterFormDataType, ErrorType } from "../types";
 import { registerFormProperties } from "../utils/data";
 import { validateField } from "../utils/helperFunctions";
 import Button from "../components/Button";
+import { notify } from "../index";
 
 function Register() {
   const [formData, setFormData] = useState<RegisterFormDataType>({
@@ -86,6 +88,8 @@ function Register() {
 
     if (Object.keys(validationErrors).length === 0) {
       console.log(formData);
+
+      notify("User has been created successfully!", "success");
       // axios
       //   .post("/auth/register", formValue)
       //   .then((res) => console.log(res))
