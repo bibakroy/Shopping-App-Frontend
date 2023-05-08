@@ -5,6 +5,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import "./index.css";
 import App from "./App";
+import { UserContextProvider } from "./contexts/UserProvider";
 
 type ToastType = "info" | "success" | "warning" | "error" | "default";
 
@@ -16,7 +17,9 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <App />
-    <ToastContainer />
+    <UserContextProvider>
+      <App />
+      <ToastContainer />
+    </UserContextProvider>
   </React.StrictMode>
 );

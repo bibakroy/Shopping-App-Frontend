@@ -24,3 +24,9 @@ export type ErrorType = {
   password: string;
   confirmPassword?: string;
 };
+
+export type User = {
+  userId: string;
+  name: string;
+  email: string;
+};

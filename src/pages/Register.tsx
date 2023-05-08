@@ -1,15 +1,17 @@
 import { useState } from "react";
 import axios from "../utils/axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { isAxiosError } from "axios";
+import jwt_decode from "jwt-decode";
 
 import styles from "../styles/Auth.module.css";
 import InputContainer from "../components/InputContainer";
-import { RegisterFormDataType, ErrorType } from "../types";
+import { RegisterFormDataType, ErrorType, User } from "../types";
 import { registerFormProperties } from "../utils/data";
 import { validateField } from "../utils/helperFunctions";
 import Button from "../components/Button";
 import { notify } from "../index";
+import { useUserContext } from "../contexts/UserProvider";
 
 function Register() {
   const [formData, setFormData] = useState<RegisterFormDataType>({
@@ -24,6 +26,9 @@ function Register() {
     password: "",
     confirmPassword: "",
   });
+
+  const { setUser, setLoading } = useUserContext();
+  const navigate = useNavigate();
 
   const handleChange = (e: React.FormEvent<HTMLFormElement>) => {
     const { name, value } = e.target as HTMLInputElement;
@@ -86,24 +91,50 @@ function Register() {
       }
     }
 
-    if (Object.keys(validationErrors).length === 0) {
-      const data = {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-      };
-
-      try {
-        const res = await axios.post("/auth/register", data);
-        localStorage.setItem("token", res.data.token);
-        notify("User has been created successfully!", "success");
-      } catch (error: unknown) {
-        if (isAxiosError(error)) {
-          notify(error?.response?.data.message, "error");
-        }
-      }
-    } else {
+    if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
+      return;
+    }
+
+    const data = {
+      name: formData.name,
+      email: formData.email,
+      password: formData.password,
+    };
+
+    try {
+      setLoading(true);
+      const res = await axios.post("/auth/register", data);
+      localStorage.setItem("token", res.data.token);
+      notify("User has been created successfully!", "success");
+
+      const decoded: User = jwt_decode(res.data.token);
+      setUser((prevUser) => ({
+        ...prevUser,
+        userId: decoded.userId,
+        name: decoded.name,
+        email: decoded.email,
+      }));
+      setFormData({
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
+      setErrors({
+        name: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
+      });
+
+      navigate("/");
+    } catch (error: unknown) {
+      if (isAxiosError(error)) {
+        notify(error?.response?.data.message, "error");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 

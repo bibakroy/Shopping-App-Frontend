@@ -1,15 +1,17 @@
 import { useState } from "react";
 import axios from "../utils/axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { isAxiosError } from "axios";
+import jwt_decode from "jwt-decode";
 
 import styles from "../styles/Auth.module.css";
 import InputContainer from "../components/InputContainer";
-import { LoginFormDataType, ErrorType } from "../types";
+import { LoginFormDataType, ErrorType, User } from "../types";
 import { loginFormProperties } from "../utils/data";
 import { validateField } from "../utils/helperFunctions";
 import Button from "../components/Button";
 import { notify } from "../index";
+import { useUserContext } from "../contexts/UserProvider";
 
 function Login() {
   const [formData, setFormData] = useState<LoginFormDataType>({
@@ -20,6 +22,9 @@ function Login() {
     email: "",
     password: "",
   });
+
+  const { setUser, setLoading } = useUserContext();
+  const navigate = useNavigate();
 
   const handleChange = (e: React.FormEvent<HTMLFormElement>) => {
     const { name, value } = e.target as HTMLInputElement;
@@ -55,23 +60,45 @@ function Login() {
       }
     }
 
-    if (Object.keys(validationErrors).length === 0) {
-      try {
-        const res = await axios.post("/auth/login", formData);
-        localStorage.setItem("token", res.data.token);
-        notify("Logged in successfully!", "success");
-      } catch (error: unknown) {
-        if (isAxiosError(error)) {
-          setErrors((prevErrors) => ({
-            ...prevErrors,
-            email: "Invalid email or password",
-            password: "Invalid email or password",
-          }));
-          notify(error?.response?.data.message, "error");
-        }
-      }
-    } else {
+    if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const res = await axios.post("/auth/login", formData);
+      localStorage.setItem("token", res.data.token);
+      notify("Logged in successfully!", "success");
+
+      const decoded: User = jwt_decode(res.data.token);
+      setUser((prevUser) => ({
+        ...prevUser,
+        userId: decoded.userId,
+        name: decoded.name,
+        email: decoded.email,
+      }));
+      setFormData({
+        email: "",
+        password: "",
+      });
+      setErrors({
+        email: "",
+        password: "",
+      });
+
+      navigate("/");
+    } catch (error: unknown) {
+      if (isAxiosError(error)) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          email: "Invalid email or password",
+          password: "Invalid email or password",
+        }));
+        notify(error?.response?.data.message, "error");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
