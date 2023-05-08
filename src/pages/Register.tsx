@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import axios from "../utils/axios";
 import { Link } from "react-router-dom";
 
 import styles from "../styles/Auth.module.css";
@@ -87,7 +87,7 @@ function Register() {
     if (Object.keys(validationErrors).length === 0) {
       console.log(formData);
       // axios
-      //   .post("/api/auth/register", formValue)
+      //   .post("/auth/register", formValue)
       //   .then((res) => console.log(res))
       //   .catch((err) => console.log(err));
     } else {
