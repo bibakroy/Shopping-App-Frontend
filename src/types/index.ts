@@ -25,8 +25,15 @@ export type ErrorType = {
   confirmPassword?: string;
 };
 
-export type User = {
+export type UserType = {
   userId: string;
   name: string;
   email: string;
+};
+
+export type ItemType = {
+  _id: string;
+  name: string;
+  created_at: string;
+  created_by: string;
 };

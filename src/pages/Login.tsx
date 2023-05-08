@@ -6,7 +6,7 @@ import jwt_decode from "jwt-decode";
 
 import styles from "../styles/Auth.module.css";
 import InputContainer from "../components/InputContainer";
-import { LoginFormDataType, ErrorType, User } from "../types";
+import { LoginFormDataType, ErrorType, UserType } from "../types";
 import { loginFormProperties } from "../utils/data";
 import { validateField } from "../utils/helperFunctions";
 import Button from "../components/Button";
@@ -68,25 +68,21 @@ function Login() {
     try {
       setLoading(true);
       const res = await axios.post("/auth/login", formData);
-      localStorage.setItem("token", res.data.token);
-      notify("Logged in successfully!", "success");
 
-      const decoded: User = jwt_decode(res.data.token);
+      localStorage.setItem("token", res.data.token);
+      axios.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${res.data.token}`;
+
+      const decoded: UserType = jwt_decode(res.data.token);
       setUser((prevUser) => ({
         ...prevUser,
         userId: decoded.userId,
         name: decoded.name,
         email: decoded.email,
       }));
-      setFormData({
-        email: "",
-        password: "",
-      });
-      setErrors({
-        email: "",
-        password: "",
-      });
 
+      notify("Logged in successfully!", "success");
       navigate("/");
     } catch (error: unknown) {
       if (isAxiosError(error)) {

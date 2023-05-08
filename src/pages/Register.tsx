@@ -6,7 +6,7 @@ import jwt_decode from "jwt-decode";
 
 import styles from "../styles/Auth.module.css";
 import InputContainer from "../components/InputContainer";
-import { RegisterFormDataType, ErrorType, User } from "../types";
+import { RegisterFormDataType, ErrorType, UserType } from "../types";
 import { registerFormProperties } from "../utils/data";
 import { validateField } from "../utils/helperFunctions";
 import Button from "../components/Button";
@@ -105,29 +105,21 @@ function Register() {
     try {
       setLoading(true);
       const res = await axios.post("/auth/register", data);
-      localStorage.setItem("token", res.data.token);
-      notify("User has been created successfully!", "success");
 
-      const decoded: User = jwt_decode(res.data.token);
+      localStorage.setItem("token", res.data.token);
+      axios.defaults.headers.common[
+        "Authorization"
+      ] = `Bearer ${res.data.token}`;
+
+      const decoded: UserType = jwt_decode(res.data.token);
       setUser((prevUser) => ({
         ...prevUser,
         userId: decoded.userId,
         name: decoded.name,
         email: decoded.email,
       }));
-      setFormData({
-        name: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-      });
-      setErrors({
-        name: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-      });
 
+      notify("User has been created successfully!", "success");
       navigate("/");
     } catch (error: unknown) {
       if (isAxiosError(error)) {

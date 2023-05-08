@@ -1,17 +1,43 @@
 import Button from "../components/Button";
 import { useUserContext } from "../contexts/UserProvider";
 import withAuth from "../HOC/withAuth";
+import ItemList from "../components/ItemList";
 
 function Home() {
-  const { user, logOut, loading } = useUserContext();
+  const { user, logOut } = useUserContext();
 
   return (
     <div>
-      <h1>Home</h1>
-      <hr />
-      <h2>Welcome "{user?.name}"</h2>
-      <p>{loading ? "Loading" : "Not loading"}</p>
-      <Button onClick={logOut}>Log out</Button>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          marginBottom: "20px",
+          gap: "1rem",
+        }}
+      >
+        <p>Welcome, {user?.name}</p>
+        <Button
+          onClick={logOut}
+          style={{
+            width: "5rem",
+            fontSize: "14px",
+          }}
+        >
+          Log out
+        </Button>
+      </div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+        }}
+      >
+        <ItemList />
+      </div>
     </div>
   );
 }

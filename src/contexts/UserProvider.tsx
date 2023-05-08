@@ -8,15 +8,16 @@ import React, {
 } from "react";
 import jwt_decode from "jwt-decode";
 
-import { User } from "../types";
+import axios from "../utils/axios";
+import { UserType } from "../types";
 
 type UserContextProviderProps = {
   children: React.ReactNode;
 };
 
 type UserContextType = {
-  user: User | null;
-  setUser: Dispatch<SetStateAction<User | null>>;
+  user: UserType | null;
+  setUser: Dispatch<SetStateAction<UserType | null>>;
   loading: boolean;
   setLoading: Dispatch<SetStateAction<boolean>>;
   logOut: () => void;
@@ -25,14 +26,14 @@ type UserContextType = {
 const UserContext = createContext({} as UserContextType);
 
 export const UserContextProvider = ({ children }: UserContextProviderProps) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<UserType | null>(null);
   const [loading, setLoading] = useState(true);
-
-  console.log({ user, loading });
 
   const logOut = () => {
     setUser(null);
     localStorage.removeItem("token");
+    delete axios.defaults.headers.common["Authorization"];
+    window.location.href = "/login";
   };
 
   useEffect(() => {
@@ -40,7 +41,7 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
 
     if (token) {
       try {
-        const decoded: User = jwt_decode(token);
+        const decoded: UserType = jwt_decode(token);
 
         setUser((prevUser) => ({
           ...prevUser,
@@ -48,13 +49,13 @@ export const UserContextProvider = ({ children }: UserContextProviderProps) => {
           name: decoded.name,
           email: decoded.email,
         }));
+
+        axios.defaults.headers.common["Authorization"] = `Bearer ${token}`;
       } catch (error) {
         console.log(error);
       }
     }
   }, []);
-
-  useEffect(() => {}, [user]);
 
   return (
     <UserContext.Provider

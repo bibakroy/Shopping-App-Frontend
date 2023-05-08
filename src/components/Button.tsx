@@ -2,11 +2,11 @@ import styles from "../styles/Button.module.css";
 
 function Button({
   children,
-  onClick,
+  onClick = () => {},
   ...rest
 }: {
   children: React.ReactNode;
-  onClick: (e: React.MouseEvent<HTMLButtonElement>) => void;
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void;
   [rest: string]: any;
 }) {
   return (
