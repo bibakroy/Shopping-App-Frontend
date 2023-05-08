@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "../utils/axios";
 import { Link } from "react-router-dom";
-import { toast } from "react-toastify";
+import { isAxiosError } from "axios";
 
 import styles from "../styles/Auth.module.css";
 import InputContainer from "../components/InputContainer";
@@ -74,7 +74,7 @@ function Register() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const validationErrors = {} as ErrorType;
@@ -87,13 +87,21 @@ function Register() {
     }
 
     if (Object.keys(validationErrors).length === 0) {
-      console.log(formData);
+      const data = {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+      };
 
-      notify("User has been created successfully!", "success");
-      // axios
-      //   .post("/auth/register", formValue)
-      //   .then((res) => console.log(res))
-      //   .catch((err) => console.log(err));
+      try {
+        const res = await axios.post("/auth/register", data);
+        localStorage.setItem("token", res.data.token);
+        notify("User has been created successfully!", "success");
+      } catch (error: unknown) {
+        if (isAxiosError(error)) {
+          notify(error?.response?.data.message, "error");
+        }
+      }
     } else {
       setErrors(validationErrors);
     }

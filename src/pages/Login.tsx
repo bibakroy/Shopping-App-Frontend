@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "../utils/axios";
 import { Link } from "react-router-dom";
+import { isAxiosError } from "axios";
 
 import styles from "../styles/Auth.module.css";
 import InputContainer from "../components/InputContainer";
@@ -8,6 +9,7 @@ import { LoginFormDataType, ErrorType } from "../types";
 import { loginFormProperties } from "../utils/data";
 import { validateField } from "../utils/helperFunctions";
 import Button from "../components/Button";
+import { notify } from "../index";
 
 function Login() {
   const [formData, setFormData] = useState<LoginFormDataType>({
@@ -41,7 +43,7 @@ function Login() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const validationErrors = {} as ErrorType;
@@ -54,11 +56,20 @@ function Login() {
     }
 
     if (Object.keys(validationErrors).length === 0) {
-      console.log(formData);
-      // axios
-      //   .post("/auth/login", formValue)
-      //   .then((res) => console.log(res))
-      //   .catch((err) => console.log(err));
+      try {
+        const res = await axios.post("/auth/login", formData);
+        localStorage.setItem("token", res.data.token);
+        notify("Logged in successfully!", "success");
+      } catch (error: unknown) {
+        if (isAxiosError(error)) {
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            email: "Invalid email or password",
+            password: "Invalid email or password",
+          }));
+          notify(error?.response?.data.message, "error");
+        }
+      }
     } else {
       setErrors(validationErrors);
     }
