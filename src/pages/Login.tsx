@@ -4,23 +4,19 @@ import { Link } from "react-router-dom";
 
 import styles from "../styles/Auth.module.css";
 import InputContainer from "../components/InputContainer";
-import { RegisterFormDataType, ErrorType } from "../types";
-import { registerFormProperties } from "../utils/data";
+import { LoginFormDataType, ErrorType } from "../types";
+import { loginFormProperties } from "../utils/data";
 import { validateField } from "../utils/helperFunctions";
 import Button from "../components/Button";
 
-function Register() {
-  const [formData, setFormData] = useState<RegisterFormDataType>({
-    name: "",
+function Login() {
+  const [formData, setFormData] = useState<LoginFormDataType>({
     email: "",
     password: "",
-    confirmPassword: "",
   });
   const [errors, setErrors] = useState<ErrorType>({
-    name: "",
     email: "",
     password: "",
-    confirmPassword: "",
   });
 
   const handleChange = (e: React.FormEvent<HTMLFormElement>) => {
@@ -29,43 +25,16 @@ function Register() {
       ...prevFormData,
       [name]: value,
     }));
-
-    if (name === "password" && formData.confirmPassword) {
-      const passwordErrorMsg = validateField("password", value);
-      const confirmPasswordErrorMsg = validateField(
-        "confirmPassword",
-        formData.confirmPassword,
-        value
-      );
-
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        password: passwordErrorMsg,
-        confirmPassword: confirmPasswordErrorMsg,
-      }));
-    } else if (name === "confirmPassword" && formData.password) {
-      const confirmPasswordErrorMsg = validateField(
-        "confirmPassword",
-        value,
-        formData.password
-      );
-
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        confirmPassword: confirmPasswordErrorMsg,
-      }));
-    } else {
-      setErrors((prevErrors) => ({
-        ...prevErrors,
-        [name]: "",
-      }));
-    }
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: "",
+    }));
   };
 
   const handleBlur = (e: React.FormEvent<HTMLFormElement>) => {
     const { name, value } = e.target as HTMLInputElement;
 
-    const errorMsg = validateField(name, value, formData.password);
+    const errorMsg = validateField(name, value);
     setErrors((prevErrors) => ({
       ...prevErrors,
       [name]: errorMsg,
@@ -78,7 +47,7 @@ function Register() {
     const validationErrors = {} as ErrorType;
 
     for (const [name, value] of Object.entries(formData)) {
-      const errorMsg = validateField(name, value, formData.password);
+      const errorMsg = validateField(name, value);
       if (errorMsg) {
         validationErrors[name as keyof ErrorType] = errorMsg;
       }
@@ -87,7 +56,7 @@ function Register() {
     if (Object.keys(validationErrors).length === 0) {
       console.log(formData);
       // axios
-      //   .post("/api/auth/register", formValue)
+      //   .post("/api/auth/login", formValue)
       //   .then((res) => console.log(res))
       //   .catch((err) => console.log(err));
     } else {
@@ -98,10 +67,10 @@ function Register() {
   return (
     <div className={styles.main}>
       <div className={styles.container}>
-        <h3>Create Your Account</h3>
+        <h3>Log In to Your Account</h3>
         <form className={styles.form} onSubmit={handleSubmit} noValidate>
           <div className={styles.formFields}>
-            {registerFormProperties.map((formProperty, index) => (
+            {loginFormProperties.map((formProperty, index) => (
               <InputContainer
                 key={index}
                 formProperty={formProperty}
@@ -115,9 +84,9 @@ function Register() {
           <Button onClick={() => console.log("Clicked")}>Login</Button>
         </form>
         <p>
-          Already have an account?{" "}
+          Don&apos;t have any account?{" "}
           <span className={styles.redirectSpan}>
-            <Link to={"/login"}> Log In</Link>
+            <Link to={"/register"}> Register</Link>
           </span>
         </p>
       </div>
@@ -125,4 +94,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default Login;
