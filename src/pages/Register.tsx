@@ -149,12 +149,12 @@ function Register() {
 
           <Button onClick={() => console.log("Clicked")}>Login</Button>
         </form>
-        <p>
-          Already have an account?{" "}
-          <span className={styles.redirectSpan}>
+        <div className={styles.redirect}>
+          <p>Already have an account?</p>
+          <p>
             <Link to={"/login"}> Log In</Link>
-          </span>
-        </p>
+          </p>
+        </div>
       </div>
     </div>
   );

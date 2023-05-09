@@ -28,3 +28,9 @@
   margin-bottom: 0.5rem;
   color: rgb(233, 69, 96);
 }
+
+@media (max-width: 480px) {
+  .inputContainer {
+    width: 100%;
+  }
+}

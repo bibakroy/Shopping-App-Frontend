@@ -117,12 +117,12 @@ function Login() {
 
           <Button onClick={() => console.log("Clicked")}>Login</Button>
         </form>
-        <p>
-          Don&apos;t have any account?{" "}
-          <span className={styles.redirectSpan}>
+        <div className={styles.redirect}>
+          <p>Don&apos;t have any account? </p>
+          <p>
             <Link to={"/register"}> Register</Link>
-          </span>
-        </p>
+          </p>
+        </div>
       </div>
     </div>
   );

@@ -38,9 +38,22 @@
   gap: 0.4rem;
 }
 
-.redirectSpan > a {
+.redirect {
+  display: flex;
+  gap: 0.2rem;
+  align-items: center;
+  justify-content: center;
+}
+
+.redirect p:last-child {
   text-decoration: underline;
   font-weight: 800;
   color: rgb(55, 54, 68);
-  font-size: 16px;
+  font-size: 14px;
+}
+
+@media (max-width: 480px) {
+  .redirect {
+    flex-direction: column;
+  }
 }

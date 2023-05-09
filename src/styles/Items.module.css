@@ -105,9 +105,7 @@
   width: 5rem;
 }
 
-/* media query */
-
-@media (max-width: 518px) {
+@media (max-width: 480px) {
   .itemSearchAdd {
     flex-wrap: wrap;
   }
