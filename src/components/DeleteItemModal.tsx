@@ -35,21 +35,23 @@ function DeleteItemModal({
 
   return (
     <Modal modalIsOpen={deleteModalIsOpen} closeModal={closeDeleteModal}>
-      <h3>Are you sure?</h3>
-      <button
-        className={styles.button}
-        style={{
-          position: "absolute",
-          top: "0",
-          right: "0",
-          padding: "0.5rem",
-        }}
-        onClick={closeDeleteModal}
-        type="button"
-      >
-        <FontAwesomeIcon icon={faXmark} />
-      </button>
-      <Button onClick={handleDelete}>Delete</Button>
+      <div className={styles.modalInnerContainer}>
+        <h4>Are you sure?</h4>
+        <FontAwesomeIcon
+          icon={faXmark}
+          style={{
+            position: "absolute",
+            top: "7",
+            right: "7",
+            cursor: "pointer",
+          }}
+          onClick={closeDeleteModal}
+        />
+        <div className={styles.consent}>
+          <Button onClick={handleDelete}>Yes</Button>
+          <Button onClick={closeDeleteModal}>No</Button>
+        </div>
+      </div>
     </Modal>
   );
 }

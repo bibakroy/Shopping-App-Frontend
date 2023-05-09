@@ -35,21 +35,22 @@ function Item({
 
   return (
     <div className={styles.row}>
-      <div>{item.name}</div>
-      <div>{new Date(item.created_at).toLocaleString()}</div>
-      <div
-        style={{
-          display: "flex",
-          gap: "1.5rem",
-        }}
-      >
-        <button className={styles.button} onClick={openEditModal}>
-          <FontAwesomeIcon icon={faPenToSquare} fontSize={16} />
-        </button>
-        <button className={styles.button} onClick={openDeleteModal}>
-          <FontAwesomeIcon icon={faTrash} fontSize={16} />
-        </button>
-      </div>
+      <p>{item.name}</p>
+      <p>{new Date(item.created_at).toLocaleString()}</p>
+      <p>
+        <FontAwesomeIcon
+          icon={faPenToSquare}
+          fontSize={15}
+          onClick={openEditModal}
+          className={styles.icon}
+        />
+        <FontAwesomeIcon
+          icon={faTrash}
+          fontSize={15}
+          onClick={openDeleteModal}
+          className={styles.icon}
+        />
+      </p>
       <EditItemModal
         item={item}
         setItems={setItems}

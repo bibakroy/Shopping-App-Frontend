@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import React, { useState } from "react";
+import { useState } from "react";
 
 import { ItemType } from "../types";
 import styles from "../styles/Items.module.css";
@@ -43,35 +43,37 @@ function EditItemModal({
     }
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUpdatedItem({
+      ...updatedItem,
+      name: e.target.value,
+    });
+  };
+
   return (
     <Modal modalIsOpen={editModalIsOpen} closeModal={closeEditModal}>
-      <h3>Update Item Title</h3>
-      <button
-        className={styles.button}
-        style={{
-          position: "absolute",
-          top: "0",
-          right: "0",
-          padding: "0.5rem",
-        }}
-        onClick={closeEditModal}
-        type="button"
-      >
-        <FontAwesomeIcon icon={faXmark} />
-      </button>
-      <form onSubmit={handleUpdate}>
-        <Input
-          placeholder="Edit the title"
-          value={updatedItem.name}
-          onChange={(e) =>
-            setUpdatedItem({
-              ...updatedItem,
-              name: e.target.value,
-            })
-          }
+      <div className={styles.modalInnerContainer}>
+        <FontAwesomeIcon
+          icon={faXmark}
+          onClick={closeEditModal}
+          style={{
+            position: "absolute",
+            top: "7",
+            right: "7",
+            cursor: "pointer",
+          }}
         />
-        <Button type="submit">Update</Button>
-      </form>
+        <h3>Edit Item</h3>
+        <form onSubmit={handleUpdate} className={styles.itemForm}>
+          <label>Title</label>
+          <Input
+            placeholder="Edit the title"
+            value={updatedItem.name}
+            onChange={handleChange}
+          />
+          <Button type="submit">Update</Button>
+        </form>
+      </div>
     </Modal>
   );
 }

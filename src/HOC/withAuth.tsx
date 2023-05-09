@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+
 import { useUserContext } from "../contexts/UserProvider";
 
 const withAuth = (WrappedComponent: any) => {

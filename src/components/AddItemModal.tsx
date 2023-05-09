@@ -1,11 +1,14 @@
 import React, { useState } from "react";
-import axios from "../utils/axios";
-import Modal from "./Modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
+
+import axios from "../utils/axios";
+import Modal from "./Modal";
 import styles from "../styles/Items.module.css";
 import { ItemType } from "../types";
 import { notify } from "../index";
+import Button from "./Button";
+import Input from "./Input";
 
 const AddItemModal = ({
   modalIsOpen,
@@ -20,6 +23,11 @@ const AddItemModal = ({
     name: "",
   });
 
+  const handleClose = () => {
+    setFormData({ name: "" });
+    closeModal();
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
@@ -27,8 +35,7 @@ const AddItemModal = ({
       console.log(res.data);
       setItems((prev) => [res.data, ...prev]);
       notify("A new item has been added successfully", "success");
-      setFormData({ name: "" });
-      closeModal();
+      handleClose();
     } catch (error) {
       console.log(error);
     }
@@ -40,33 +47,30 @@ const AddItemModal = ({
   };
 
   return (
-    <Modal modalIsOpen={modalIsOpen} closeModal={closeModal}>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <button
-            className={styles.button}
-            style={{
-              position: "absolute",
-              top: "0",
-              right: "0",
-              padding: "0.5rem",
-            }}
-            onClick={closeModal}
-            type="button"
-          >
-            <FontAwesomeIcon icon={faXmark} />
-          </button>
-          <label htmlFor="name">Name</label>
-          <input
-            type="text"
-            name="name"
+    <Modal modalIsOpen={modalIsOpen} closeModal={handleClose}>
+      <div className={styles.modalInnerContainer}>
+        <FontAwesomeIcon
+          icon={faXmark}
+          onClick={handleClose}
+          style={{
+            position: "absolute",
+            top: "7",
+            right: "7",
+            cursor: "pointer",
+          }}
+        />
+        <h3>New Item</h3>
+        <form onSubmit={handleSubmit} className={styles.itemForm}>
+          <label>Title</label>
+          <Input
+            placeholder="Add a title"
             value={formData.name}
             onChange={handleChange}
-            required
+            name="name"
           />
-        </div>
-        <button type="submit">Add Item</button>
-      </form>
+          <Button type="submit">Add Item</Button>
+        </form>
+      </div>
     </Modal>
   );
 };

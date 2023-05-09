@@ -1,0 +1,11 @@
+.input {
+  display: flex;
+  height: 2rem;
+  border-radius: 0.2rem;
+  border: 1px solid rgb(0, 0, 0, 0.2);
+  padding: 0 0.8rem;
+  outline: none;
+  flex-grow: 1;
+  max-width: 25rem;
+  font-size: 14px;
+}

@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 import axios from "../utils/axios";
 import { ItemType } from "../types";
@@ -6,6 +8,8 @@ import styles from "../styles/Items.module.css";
 import Item from "./Item";
 import AddItemModal from "./AddItemModal";
 import { useUserContext } from "../contexts/UserProvider";
+import Button from "./Button";
+import Input from "./Input";
 
 const ItemList = () => {
   const [items, setItems] = useState<ItemType[]>([]);
@@ -49,48 +53,61 @@ const ItemList = () => {
   }, [items, searchTerm]);
 
   return (
-    <>
-      <div
-        style={{
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          gap: "1rem",
-        }}
-      >
-        <input
-          type="text"
-          placeholder="Search"
-          value={searchTerm}
-          onChange={handleSearch}
-        />
-        <button
+    <div className={styles.itemListContainer}>
+      <div className={styles.itemSearchAdd}>
+        <div className={styles.search}>
+          <label>Search Items</label>
+          <Input
+            type="text"
+            placeholder="Search"
+            value={searchTerm}
+            onChange={handleSearch}
+          />
+        </div>
+        <Button
           onClick={() => {
             setSearchTerm("");
             openModal();
           }}
+          style={{
+            maxWidth: "9.5rem",
+            height: "2.2rem",
+            backgroundColor: "#bdcae2",
+            color: "#000",
+          }}
+          onMouseOver={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+            e.currentTarget.style.backgroundColor = "#a6b5d6";
+          }}
+          onMouseOut={(e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+            e.currentTarget.style.backgroundColor = "#bdcae2";
+          }}
         >
-          Add Item
-        </button>
+          Add A New Item{" "}
+          <FontAwesomeIcon
+            icon={faPlus}
+            color="black"
+            style={{ marginLeft: "0.5rem" }}
+          />
+        </Button>
+
         <AddItemModal
           modalIsOpen={modalIsOpen}
           closeModal={closeModal}
           setItems={setItems}
         />
-        <div className={styles.table}>
-          <div className={styles.row}>
-            <div>Name</div>
-            <div>Created At</div>
-            <div>Action</div>
-          </div>
-          {filteredItems.map((item) => (
-            <Item key={item._id} item={item} setItems={setItems} />
-          ))}
-        </div>
       </div>
-    </>
+
+      <div className={styles.table}>
+        <div className={styles.row}>
+          <p>Name</p>
+          <p>Created At</p>
+          <p>Action</p>
+        </div>
+        {filteredItems.map((item) => (
+          <Item key={item._id} item={item} setItems={setItems} />
+        ))}
+      </div>
+    </div>
   );
 };
 

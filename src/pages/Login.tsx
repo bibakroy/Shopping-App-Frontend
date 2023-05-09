@@ -1,10 +1,10 @@
 import { useState } from "react";
-import axios from "../utils/axios";
 import { Link, useNavigate } from "react-router-dom";
 import { isAxiosError } from "axios";
 import jwt_decode from "jwt-decode";
 
 import styles from "../styles/Auth.module.css";
+import axios from "../utils/axios";
 import InputContainer from "../components/InputContainer";
 import { LoginFormDataType, ErrorType, UserType } from "../types";
 import { loginFormProperties } from "../utils/data";
