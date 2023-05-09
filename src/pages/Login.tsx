@@ -65,9 +65,14 @@ function Login() {
       return;
     }
 
+    const data = {
+      email: formData.email.toLowerCase(),
+      password: formData.password,
+    };
+
     try {
       setLoading(true);
-      const res = await axios.post("/auth/login", formData);
+      const res = await axios.post("/auth/login", data);
 
       localStorage.setItem("token", res.data.token);
       axios.defaults.headers.common[

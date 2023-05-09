@@ -98,7 +98,7 @@ function Register() {
 
     const data = {
       name: formData.name,
-      email: formData.email,
+      email: formData.email.toLowerCase(),
       password: formData.password,
     };
 
